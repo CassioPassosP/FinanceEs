@@ -1,0 +1,111 @@
+import { useState } from 'react';
+import { Plus } from 'lucide-react';
+import { useTransactions } from '../../hooks/useTransactions';
+import { TransactionForm } from './TransactionForm';
+import { TransactionList } from './TransactionList';
+
+export const TransactionsPage = () => {
+  const { transactions, addTransaction, updateTransaction, deleteTransaction } = useTransactions();
+  const [showForm, setShowForm] = useState(false);
+  const [editingTransaction, setEditingTransaction] = useState(null);
+  const [filter, setFilter] = useState('all');
+
+  const handleSubmit = async (data) => {
+    try {
+      if (editingTransaction) {
+        await updateTransaction(editingTransaction.id, data);
+      } else {
+        await addTransaction(data);
+      }
+      setShowForm(false);
+      setEditingTransaction(null);
+    } catch (error) {
+      console.error('Error saving transaction:', error);
+      alert('Erro ao salvar transação');
+    }
+  };
+
+  const handleEdit = (transaction) => {
+    setEditingTransaction(transaction);
+    setShowForm(true);
+  };
+
+  const handleCancel = () => {
+    setShowForm(false);
+    setEditingTransaction(null);
+  };
+
+  const filteredTransactions = transactions.filter(t => {
+    if (filter === 'all') return true;
+    return t.type === filter;
+  });
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Transações</h2>
+          <p className="text-gray-600 mt-1">Gerencie suas receitas e despesas</p>
+        </div>
+        <button
+          onClick={() => setShowForm(true)}
+          className="flex items-center space-x-2 bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition"
+        >
+          <Plus className="w-5 h-5" />
+          <span>Nova Transação</span>
+        </button>
+      </div>
+
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-6">
+        <div className="p-4 border-b border-gray-200">
+          <div className="flex space-x-2">
+            <button
+              onClick={() => setFilter('all')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                filter === 'all'
+                  ? 'bg-emerald-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              Todas
+            </button>
+            <button
+              onClick={() => setFilter('income')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                filter === 'income'
+                  ? 'bg-green-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              Receitas
+            </button>
+            <button
+              onClick={() => setFilter('expense')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                filter === 'expense'
+                  ? 'bg-red-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              Despesas
+            </button>
+          </div>
+        </div>
+
+        <TransactionList
+          transactions={filteredTransactions}
+          onEdit={handleEdit}
+          onDelete={deleteTransaction}
+        />
+      </div>
+
+      {showForm && (
+        <TransactionForm
+          transaction={editingTransaction}
+          onSubmit={handleSubmit}
+          onCancel={handleCancel}
+        />
+      )}
+    </div>
+  );
+};
