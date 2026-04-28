@@ -1,5 +1,8 @@
 package com.finance.api.entity;
 
+import jakarta.persistence.*;
+import lombok.Data;
+
 @Entity
 @Table(name = "categories")
 @Data

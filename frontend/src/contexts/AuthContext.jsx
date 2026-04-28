@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
   // Carrega /api/users/me e preenche user + profile
   const loadProfile = async (authToken) => {
     try {
-      const res = await fetch(`${API}/api/users/me`, {
+      const res = await fetch(`${API}/users/me`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -48,44 +48,62 @@ export const AuthProvider = ({ children }) => {
   // Ao montar, ler token salvo e carregar perfil se existir
   useEffect(() => {
     const t = localStorage.getItem('token');
-    if (t) {
-      setToken(t);
-      loadProfile(t).finally(() => setLoading(false));
-    } else {
+
+    if (!t) {
       setLoading(false);
+      return;
     }
+
+    setToken(t);
+
+    loadProfile(t)
+      .catch(() => {
+        // token inválido → limpa tudo
+        localStorage.removeItem('token');
+        setToken(null);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   // LOGIN
   const signIn = async (email, password) => {
-    setLoading(true);
-    setError(null);
+  setLoading(true);
+  setError(null);
+
+  try {
+    const res = await fetch(`${API}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const text = await res.text();
+
+    let data;
+
     try {
-      const res = await fetch(`${API}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok || !data.token) {
-        throw new Error(data.message || 'Erro ao fazer login');
-      }
-
-      localStorage.setItem('token', data.token);
-      setToken(data.token);
-
-      await loadProfile(data.token);
-
-      setLoading(false);
-      return true;
-    } catch (err) {
-      console.error('Erro no login:', err);
-      setError(err.message);
-      setLoading(false);
-      return false;
+      data = JSON.parse(text);
+    } catch {
+      data = { token: text };
     }
+
+    if (!res.ok || !data.token) {
+      throw new Error(data.message || 'Erro ao fazer login');
+    }
+
+    localStorage.setItem('token', data.token);
+    setToken(data.token);
+
+    await loadProfile(data.token);
+
+    setLoading(false);
+    return true;
+  } catch (err) {
+    console.error('Erro no login:', err);
+    setError(err.message);
+    setLoading(false);
+    return false;
+  }
   };
 
   // LOGOUT
@@ -103,7 +121,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API}/api/auth/register`, {
+      const res = await fetch(`${API}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -141,7 +159,7 @@ export const AuthProvider = ({ children }) => {
   const updateProfile = async (payload) => {
     if (!token) throw new Error('Usuário não autenticado');
 
-    const res = await fetch(`${API}/api/users/me`, {
+    const res = await fetch(`${API}/users/me`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

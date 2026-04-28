@@ -1,5 +1,10 @@
 package com.finance.api.entity;
 
+import jakarta.persistence.*;
+import lombok.Data;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "transactions")
 @Data
