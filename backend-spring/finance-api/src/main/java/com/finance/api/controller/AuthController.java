@@ -1,5 +1,6 @@
 package com.finance.api.controller;
 
+import java.util.Map;
 import com.finance.api.dto.LoginDTO;
 import com.finance.api.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,10 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     @Autowired
-    private AuthService service;
+    private AuthService authService;
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginDTO dto) {
-        return service.login(dto);
+    public Map<String, String> login(@RequestBody LoginDTO dto) {
+        return authService.login(dto);
     }
 }
