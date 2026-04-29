@@ -21,7 +21,11 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedOrigins(List.of(
+            "http://localhost:5173",
+            "https://finance-es.vercel.app",
+            "https://finance-jzeu55qpi-sktcapbs-projects.vercel.app"
+        ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
@@ -51,13 +55,6 @@ public class SecurityConfig {
                 .requestMatchers("/auth/**").permitAll()
                 .anyRequest().permitAll()
             )
-                // .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                // .requestMatchers("/auth/**").permitAll()
-                // .requestMatchers("/transactions/**").authenticated()
-                // .requestMatchers("/goals/**").authenticated()
-                // .requestMatchers("/categories/**").authenticated()
-                // .anyRequest().authenticated()
-                // .anyRequest().permitAll()
             .addFilterBefore(jwFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
