@@ -23,7 +23,7 @@ export function useGoals() {
   }, []);
 
   const loadGoals = async () => {
-    const res = await authFetch('/api/goals');
+    const res = await authFetch('/goals');
     if (res.ok) {
       setGoals(res.data.map(normalizeGoal));
     }
@@ -37,7 +37,7 @@ export function useGoals() {
       due_date: data.deadline || null // converte para nome do backend
     };
 
-    const res = await authFetch('/api/goals', {
+    const res = await authFetch('/goals', {
       method: 'POST',
       body: JSON.stringify(payload)
     });
@@ -57,17 +57,24 @@ export function useGoals() {
     if (updates.status !== undefined) payload.status = updates.status;
     if (updates.current_amount !== undefined) payload.current_amount = updates.current_amount;
 
-    // backend NÃO SUPORTA completed_at → REMOVIDO
-
-    const res = await authFetch(`/api/goals/${id}`, {
+    const res = await authFetch(`/goals/${id}`, {
       method: 'PUT',
       body: JSON.stringify(payload),
     });
 
+    console.log("RESPONSE:", res.data);
+
     if (res.ok) {
       const updated = normalizeGoal(res.data);
-      setGoals((prev) => prev.map(g => g.id === id ? updated : g));
+      setGoals((prev) =>
+        prev.map(g =>
+          g.id === id
+            ? { ...g, ...updated }
+            : g
+      )
+      );
     }
+
   };
 
   // Progresso
@@ -78,11 +85,12 @@ export function useGoals() {
     const newValue = Number(goal.current_amount) + Number(amount);
 
     return updateGoal(id, { current_amount: newValue });
+
   };
 
   // Excluir
   const deleteGoal = async (id) => {
-    const res = await authFetch(`/api/goals/${id}`, {
+    const res = await authFetch(`/goals/${id}`, {
       method: 'DELETE'
     });
 

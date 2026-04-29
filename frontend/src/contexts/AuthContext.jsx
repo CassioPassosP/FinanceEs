@@ -115,20 +115,18 @@ export const AuthProvider = ({ children }) => {
   };
 
   // CADASTRO
-  // Mantém a assinatura que você usa no App:
-  // handleRegister(fullName, email, password, profileType) -> signUp(...)
   const signUp = async (fullName, email, password, profileType) => {
     setLoading(true);
     setError(null);
+
     try {
-      const res = await fetch(`${API}/auth/register`, {
+      const res = await fetch(`${API}/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          full_name: fullName,
+          name: fullName,
           email,
           password,
-          profile_type: profileType,
         }),
       });
 
@@ -138,15 +136,12 @@ export const AuthProvider = ({ children }) => {
         throw new Error(data.message || 'Erro ao criar conta');
       }
 
-      // se o backend devolver token, já faz login automático
-      if (data.token) {
-        localStorage.setItem('token', data.token);
-        setToken(data.token);
-        await loadProfile(data.token);
-      }
+
+      const loginOk = await signIn(email, password);
 
       setLoading(false);
-      return true;
+      return loginOk;
+
     } catch (err) {
       console.error('Erro no cadastro:', err);
       setError(err.message);
@@ -155,7 +150,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // ATUALIZAR PERFIL (full_name, profile_type, monthly_budget)
   const updateProfile = async (payload) => {
     if (!token) throw new Error('Usuário não autenticado');
 

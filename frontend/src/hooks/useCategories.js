@@ -23,7 +23,7 @@ export function useCategories() {
     setLoading(true);
     setError(null);
     try {
-      const res = await authFetch('/api/categories');
+      const res = await authFetch('/categories');
 
       if (res.ok) {
         const raw = Array.isArray(res.data) ? res.data : [];
@@ -42,7 +42,7 @@ export function useCategories() {
 
   const addCategory = async ({ name, type = 'expense', color, icon }) => {
     try {
-      const res = await authFetch('/api/categories', {
+      const res = await authFetch('/categories', {
         method: 'POST',
         body: JSON.stringify({ name, type, color, icon }),
       });

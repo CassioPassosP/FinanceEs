@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { UserPlus } from 'lucide-react';
 
-export const RegisterForm = ({ onSubmit, onToggleMode }) => {
+export const RegisterForm = ({ onSubmit, onToggleMode, signIn, navigate }) => {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -29,13 +29,25 @@ export const RegisterForm = ({ onSubmit, onToggleMode }) => {
     setLoading(true);
 
     try {
-      // ORDEM CORRETA: fullName, email, password, profileType
-      await onSubmit(
+      const success = await onSubmit(
         formData.fullName,
         formData.email,
         formData.password,
         formData.profileType
       );
+
+      if (!success) {
+        setLoading(false);
+        return;
+      }
+
+      // LOGIN AUTOMÁTICO
+      const logged = await signIn(formData.email, formData.password);
+
+      if (logged) {
+        navigate('/dashboard');
+      }
+
     } catch (err) {
       setError(err.message || 'Erro ao criar conta');
     } finally {

@@ -10,18 +10,43 @@ export const TransactionsPage = () => {
   const [editingTransaction, setEditingTransaction] = useState(null);
   const [filter, setFilter] = useState('all');
 
-  const handleSubmit = async (data) => {
-    try {
-      if (editingTransaction) {
-        await updateTransaction(editingTransaction.id, data);
-      } else {
-        await addTransaction(data);
+  const formatDate = (date) => {
+    if (!date) return date;
+
+    if (date.includes('T')) return date;
+
+    if (date.includes('/')) {
+     const [day, month, year] = date.split('/');
+     return `${year}-${month}-${day}T00:00:00`;
+    }
+
+    return `${date}T00:00:00`;
+  };
+
+const handleSubmit = async (data) => {
+  try {
+      const payload = {
+        ...data,
+        date: formatDate(data.date),
+        type:
+          data.type === 'Receita'
+            ? 'income'
+            : data.type === 'Despesa'
+            ? 'expense'
+            : data.type, // fallback
+      };
+
+     if (editingTransaction) {
+       await updateTransaction(editingTransaction.id, payload);
+     } else {
+        await addTransaction(payload);
       }
+
       setShowForm(false);
       setEditingTransaction(null);
     } catch (error) {
-      console.error('Error saving transaction:', error);
-      alert('Erro ao salvar transação');
+        console.error('Error saving transaction:', error);
+        alert('Erro ao salvar transação');
     }
   };
 

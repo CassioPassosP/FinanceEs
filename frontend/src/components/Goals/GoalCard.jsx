@@ -5,10 +5,10 @@ export const GoalCard = ({ goal, onEdit, onDelete, onAddProgress, onUpdateStatus
   const [showAddProgress, setShowAddProgress] = useState(false);
   const [progressAmount, setProgressAmount] = useState('');
 
-  const progress = Math.min(
-    (parseFloat(goal.current_amount) / parseFloat(goal.target_amount)) * 100,
-    100
-  );
+  const current = parseFloat(goal.current_amount) || 0;
+  const target = parseFloat(goal.target_amount) || 1;
+
+  const progress = Math.min((current / target) * 100, 100);
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -27,12 +27,18 @@ export const GoalCard = ({ goal, onEdit, onDelete, onAddProgress, onUpdateStatus
     }).format(date);
   };
 
-  const handleAddProgress = () => {
-    if (progressAmount && parseFloat(progressAmount) > 0) {
-      onAddProgress(goal.id, parseFloat(progressAmount));
-      setProgressAmount('');
-      setShowAddProgress(false);
-    }
+  const handleAddProgress = (id, value) => {
+    setGoals(prevGoals =>
+      prevGoals.map(goal =>
+        goal.id === id
+          ? {
+              ...goal,
+              current_amount:
+                (parseFloat(goal.current_amount) || 0) + value
+            }
+          : goal
+      )
+    );
   };
 
   const handleDelete = () => {
@@ -147,7 +153,13 @@ export const GoalCard = ({ goal, onEdit, onDelete, onAddProgress, onUpdateStatus
               />
               <div className="flex space-x-2">
                 <button
-                  onClick={handleAddProgress}
+                  onClick={() => {
+                    if (progressAmount && parseFloat(progressAmount) > 0) {
+                      onAddProgress(goal.id, parseFloat(progressAmount));
+                      setProgressAmount('');
+                      setShowAddProgress(false);
+                    }
+                  }}
                   className="flex-1 px-3 py-2 bg-emerald-600 text-white rounded-lg text-sm hover:bg-emerald-700 transition"
                 >
                   Adicionar

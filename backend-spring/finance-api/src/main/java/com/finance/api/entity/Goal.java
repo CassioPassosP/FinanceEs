@@ -1,5 +1,6 @@
 package com.finance.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.math.BigDecimal;
@@ -17,9 +18,11 @@ public class Goal {
 
     private String title;
 
+    @JsonProperty("target_amount")
     @Column(name = "target_amount")
     private BigDecimal targetAmount;
 
+    @JsonProperty("current_amount")
     @Column(name = "current_amount")
     private BigDecimal currentAmount = BigDecimal.ZERO;
 

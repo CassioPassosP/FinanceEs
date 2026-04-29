@@ -15,6 +15,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import java.util.List;
+
 @Component
 public class JwFilter extends OncePerRequestFilter {
 
@@ -24,12 +27,16 @@ public class JwFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            String token = extrairToken(request);
+            String token = extrairToken(request); 
 
             if (token != null && jwtService.validarToken(token)) {
                 String email = jwtService.extrairEmail(token);
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        email, null, new ArrayList<>());
+                UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(
+                        email,
+                        null,
+                        List.of(new SimpleGrantedAuthority("ROLE_USER"))
+                );
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {

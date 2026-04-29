@@ -21,9 +21,9 @@ public class CategoryService {
     private UserRepository userRepository;
 
     public List<CategoryDTO> listarPorUsuario(Long userId) {
-        return categoryRepository.findByUserId(userId).stream()
-                .map(this::entityToDTO)
-                .collect(Collectors.toList());
+        return categoryRepository.findAll().stream()
+            .map(this::entityToDTO)
+            .collect(Collectors.toList());
     }
 
     public List<CategoryDTO> listarPorUsuarioETipo(Long userId, String type) {

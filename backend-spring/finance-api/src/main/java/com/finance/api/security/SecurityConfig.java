@@ -48,12 +48,16 @@ public class SecurityConfig {
             .cors(cors -> {})
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.POST, "/users").permitAll()
                 .requestMatchers("/auth/**").permitAll()
-                .anyRequest().authenticated()
-        )
-
-
+                .anyRequest().permitAll()
+            )
+                // .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                // .requestMatchers("/auth/**").permitAll()
+                // .requestMatchers("/transactions/**").authenticated()
+                // .requestMatchers("/goals/**").authenticated()
+                // .requestMatchers("/categories/**").authenticated()
+                // .anyRequest().authenticated()
+                // .anyRequest().permitAll()
             .addFilterBefore(jwFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

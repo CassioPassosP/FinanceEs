@@ -23,7 +23,7 @@ export const Header = ({ onNavigate, currentPage }) => {
               <span className="text-white font-bold text-lg">$</span>
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900">FinanceFlow</h1>
+              <h1 className="text-xl font-bold text-gray-900">FinanceEs</h1>
               <p className="text-xs text-gray-500">Gestão Financeira</p>
             </div>
           </div>

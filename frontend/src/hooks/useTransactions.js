@@ -8,7 +8,7 @@ export const useTransactions = () => {
   // Carregar todas as transações
   const loadTransactions = async () => {
     try {
-      const res = await authFetch('/api/transactions');
+      const res = await authFetch('/transactions');
       if (res.ok) {
         // backend deve devolver um array de transações
         setTransactions(Array.isArray(res.data) ? res.data : []);
@@ -22,7 +22,7 @@ export const useTransactions = () => {
 
   // Adicionar transação
   const addTransaction = async (payload) => {
-    const res = await authFetch('/api/transactions', {
+    const res = await authFetch('/transactions', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
@@ -39,7 +39,7 @@ export const useTransactions = () => {
 
   // 🔧 Atualizar transação (EDITAR)
   const updateTransaction = async (id, payload) => {
-    const res = await authFetch(`/api/transactions/${id}`, {
+    const res = await authFetch(`/transactions/${id}`, {
       method: 'PUT',
       body: JSON.stringify(payload),
     });
@@ -58,7 +58,7 @@ export const useTransactions = () => {
 
   // 🔧 Excluir transação
   const deleteTransaction = async (id) => {
-    const res = await authFetch(`/api/transactions/${id}`, {
+    const res = await authFetch(`/transactions/${id}`, {
       method: 'DELETE',
     });
 
