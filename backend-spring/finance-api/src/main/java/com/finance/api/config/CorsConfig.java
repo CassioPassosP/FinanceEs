@@ -17,7 +17,8 @@ public class CorsConfig {
         config.setAllowCredentials(true);
         config.setAllowedOrigins(List.of(
             "http://localhost:5173",
-            "https://finance-es.vercel.app"
+            "https://finance-es.vercel.app",
+            "https://finance-es-git-gamific-sktcapb-projects.vercel.app"
         ));
 
         config.setAllowedHeaders(List.of("*"));
