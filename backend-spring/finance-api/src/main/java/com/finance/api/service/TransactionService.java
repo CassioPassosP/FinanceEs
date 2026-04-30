@@ -29,6 +29,25 @@ public class TransactionService {
         return repository.save(transaction);
     }
 
+    public Transaction atualizar(Long id, Transaction nova, String email) {
+
+        Transaction antiga = repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Transação não encontrada"));
+
+        // (opcional mas importante)
+        if (!antiga.getUser().getEmail().equals(email)) {
+            throw new RuntimeException("Não autorizado");
+        }
+
+        antiga.setDescription(nova.getDescription());
+        antiga.setAmount(nova.getAmount());
+        antiga.setCategory(nova.getCategory());
+        antiga.setDate(nova.getDate());
+        antiga.setType(nova.getType());
+
+        return repository.save(antiga);
+    }
+
     public void deletar(Long id) {
         repository.deleteById(id);
     }
