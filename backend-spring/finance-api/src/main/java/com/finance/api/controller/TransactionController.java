@@ -25,6 +25,15 @@ public class TransactionController {
         return service.criar(transaction, auth.getName());
     }
 
+    @PutMapping("/{id}")
+    public Transaction atualizar(
+        @PathVariable Long id,
+        @RequestBody Transaction transaction,
+        Authentication auth
+    ) {
+        return service.atualizar(id, transaction, auth.getName());
+    }
+
     @DeleteMapping("/{id}")
     public void deletar(@PathVariable Long id) {
         service.deletar(id);
