@@ -66,15 +66,15 @@ const handleSubmit = async (data) => {
   });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex items-center justify-between mb-6">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Transações</h2>
           <p className="text-gray-600 mt-1">Gerencie suas receitas e despesas</p>
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center space-x-2 bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition"
+          className="flex items-center justify-center space-x-2 w-full sm:w-auto bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition"
         >
           <Plus className="w-5 h-5" />
           <span>Nova Transação</span>
@@ -83,7 +83,7 @@ const handleSubmit = async (data) => {
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-6">
         <div className="p-4 border-b border-gray-200">
-          <div className="flex space-x-2">
+          <div className="flex gap-2 overflow-x-auto">
             <button
               onClick={() => setFilter('all')}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition ${

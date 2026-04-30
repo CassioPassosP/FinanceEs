@@ -9,9 +9,13 @@ export const Navigation = ({ currentPage, onNavigate }) => {
   ];
 
   return (
-    <nav className="bg-white border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex space-x-1">
+    <nav className="
+      fixed bottom-0 left-0 right-0 z-50
+    bg-white border-t border-gray-200
+      md:static md:border-b md:border-t-0
+    ">
+      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+        <div className="flex justify-around md:justify-start md:space-x-2">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentPage === item.id;
@@ -20,14 +24,19 @@ export const Navigation = ({ currentPage, onNavigate }) => {
               <button
                 key={item.id}
                 onClick={() => onNavigate(item.id)}
-                className={`flex items-center space-x-2 px-4 py-3 border-b-2 transition ${
-                  isActive
+                className={`
+                  flex flex-col md:flex-row items-center justify-center
+                  text-xs md:text-sm
+                  px-2 md:px-4 py-2 md:py-3
+                  border-t-2 md:border-b-2 md:border-t-0
+                  transition
+                  ${isActive
                     ? 'border-emerald-500 text-emerald-600'
-                    : 'border-transparent text-gray-600 hover:text-gray-900 hover:border-gray-300'
-                }`}
+                    : 'border-transparent text-gray-600'}
+                  `}
               >
                 <Icon className="w-5 h-5" />
-                <span className="font-medium">{item.label}</span>
+                <span className="font-medium hidden md:block">{item.label}</span>
               </button>
             );
           })}
