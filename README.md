@@ -55,7 +55,7 @@ FinanceEs/
 ### 🔧 Backend
 
 ```bash
-cd backend
+cd backend-spring/finance-api
 ```
 
 Configure o banco de dados no arquivo `application.properties`.
