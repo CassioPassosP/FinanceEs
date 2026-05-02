@@ -94,12 +94,6 @@ jwt.secret=sua_chave_secreta
 
 ---
 
-## 📸 Demonstração
-
-> Adicione aqui prints ou GIFs do sistema (login, dashboard, funcionalidades).
-
----
-
 ## 🎯 Objetivo do Projeto
 
 Este projeto foi desenvolvido como parte da disciplina de **Projeto Final**, com foco na construção de um sistema completo utilizando boas práticas de desenvolvimento:
