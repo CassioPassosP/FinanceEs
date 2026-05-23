@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,11 +29,7 @@ public class JwFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        System.out.println("\n========== JWT FILTER ==========");
-
         String header = request.getHeader("Authorization");
-
-        System.out.println("HEADER AUTHORIZATION: " + header);
 
         // ignora requests OPTIONS (CORS)
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
@@ -44,19 +41,13 @@ public class JwFilter extends OncePerRequestFilter {
 
             String token = extrairToken(request);
 
-            System.out.println("TOKEN EXTRAIDO: " + token);
-
             if (token != null) {
 
                 boolean tokenValido = jwtService.validarToken(token);
 
-                System.out.println("TOKEN VALIDO? " + tokenValido);
-
                 if (tokenValido) {
 
                     String email = jwtService.extrairEmail(token);
-
-                    System.out.println("EMAIL EXTRAIDO: " + email);
 
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(
@@ -65,11 +56,14 @@ public class JwFilter extends OncePerRequestFilter {
                                     List.of(new SimpleGrantedAuthority("ROLE_USER"))
                             );
 
+                    authentication.setDetails(
+                        new WebAuthenticationDetailsSource()
+                                .buildDetails(request)
+                    );
+
                     SecurityContextHolder
                             .getContext()
                             .setAuthentication(authentication);
-
-                    System.out.println("USUARIO AUTENTICADO COM SUCESSO");
                 }
 
             } else {

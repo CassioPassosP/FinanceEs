@@ -31,6 +31,14 @@ public class TransactionService {
 
     List<Transaction> transactions = repository.findByUser(user);
 
+    transactions.forEach(t -> {
+    System.out.println("TRANSACAO: " + t.getId());
+
+    System.out.println("USER: " + t.getUser());
+
+    System.out.println("CATEGORY: " + t.getCategory());
+    });
+
     return transactions.stream()
         .map(t -> new TransactionDTO(
             t.getId(),
@@ -38,8 +46,8 @@ public class TransactionService {
             t.getAmount(),
             t.getDescription(),
             t.getDate(),
-            t.getUser().getId(),
-            t.getCategory().getId()
+            t.getUser() != null ? t.getUser().getId() : null,
+            t.getCategory() != null ? t.getCategory().getId() : null
         ))
         .toList();
     }
