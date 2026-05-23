@@ -7,23 +7,22 @@ export const ProfilePage = () => {
   const { profile, updateProfile } = useAuth();
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState({
-    full_name: '',
-    profile_type: 'moderado',
+    full_name: profile.name,
+    profile_type: profile.profileType || 'moderado',
     monthly_budget: 0
   });
   const [saving, setSaving] = useState(false);
 
-  // sincroniza form assim que o profile vier do backend ou for atualizado
   useEffect(() => {
     if (profile) {
       setFormData({
-        full_name: profile.full_name || '',
-        profile_type: profile.profile_type || 'moderado',
+        full_name: profile.name,
+        profile_type: profile.profileType,
         monthly_budget: profile.monthly_budget ?? 0
       });
     }
   }, [profile]);
-
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -63,8 +62,8 @@ export const ProfilePage = () => {
     impulsivo: 'Você tende a gastar com mais facilidade'
   };
 
-  const profileLabel = profileTypeLabels[profile?.profile_type] || 'Moderado';
-  const profileDesc = profileTypeDescriptions[profile?.profile_type] || profileTypeDescriptions.moderado;
+  const profileLabel = profileTypeLabels[profile?.profileType] || 'Moderado';
+  const profileDesc = profileTypeDescriptions[profile?.profileType] || profileTypeDescriptions.moderado;
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -191,8 +190,8 @@ export const ProfilePage = () => {
                   setEditing(false);
                   if (profile) {
                     setFormData({
-                      full_name: profile.full_name || '',
-                      profile_type: profile.profile_type || 'moderado',
+                      full_name: profile.name || '',
+                      profile_type: profile.profileType || 'moderado',
                       monthly_budget: profile.monthly_budget ?? 0
                     });
                   }
@@ -217,7 +216,7 @@ export const ProfilePage = () => {
               <label className="block text-sm font-medium text-gray-500 mb-1">
                 Nome Completo
               </label>
-              <p className="text-gray-900">{profile?.full_name}</p>
+              <p className="text-gray-900">{formData?.full_name}</p>
             </div>
 
             <div>
@@ -237,7 +236,7 @@ export const ProfilePage = () => {
                 {new Intl.NumberFormat('pt-BR', {
                   style: 'currency',
                   currency: 'BRL'
-                }).format(profile?.monthly_budget || 0)}
+                }).format(formData?.monthly_budget || 0)}
               </p>
             </div>
           </div>

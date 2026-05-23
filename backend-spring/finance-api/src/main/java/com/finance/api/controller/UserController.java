@@ -45,4 +45,16 @@ public class UserController {
         UserDTO created = service.criar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDTO> atualizar(@PathVariable Long id, @RequestBody UserDTO dto) {
+        UserDTO updated = service.atualizar(id, dto);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        service.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
 }

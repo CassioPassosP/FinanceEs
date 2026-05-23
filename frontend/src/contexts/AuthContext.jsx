@@ -36,8 +36,10 @@ export const AuthProvider = ({ children }) => {
       setUser({
         id: data.id,
         email: data.email,
+        userType: data.profile_type,
         name: data.full_name || data.name || '',
       });
+      
     } catch (err) {
       console.error('Erro ao carregar perfil:', err);
       setProfile(null);
@@ -126,6 +128,7 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify({
           name: fullName,
           email,
+          profile_type: profileType,
           password,
         }),
       });
@@ -153,7 +156,9 @@ export const AuthProvider = ({ children }) => {
   const updateProfile = async (payload) => {
     if (!token) throw new Error('Usuário não autenticado');
 
-    const res = await fetch(`${API}/users/me`, {
+    console.log(payload)
+
+    const res = await fetch(`${API}/users/${user?.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -174,6 +179,7 @@ export const AuthProvider = ({ children }) => {
       ...(prev || {}),
       id: data.id,
       email: data.email,
+      userType: data.profile_type,
       name: data.full_name || data.name || '',
     }));
 

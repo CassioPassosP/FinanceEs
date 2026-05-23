@@ -19,7 +19,6 @@ public class CategoryDTO {
         this.userId = userId;
     }
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
