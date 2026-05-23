@@ -29,4 +29,7 @@ public class User {
 
     @Column(name = "current_level")
     private Integer currentLevel = 1;
+
+    @Column(name = "profile_type")
+    private String profileType = "moderado"; // Default profile type
 }

@@ -20,25 +20,25 @@ public class CategoryService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<CategoryDTO> listarPorUsuario(Long userId) {
+    public List<CategoryDTO> listCategoriesUser(Long userId) {
         return categoryRepository.findAll().stream()
             .map(this::entityToDTO)
             .collect(Collectors.toList());
     }
 
-    public List<CategoryDTO> listarPorUsuarioETipo(Long userId, String type) {
+    public List<CategoryDTO> listCategoriesUserAndType(Long userId, String type) {
         return categoryRepository.findByUserIdAndType(userId, type).stream()
                 .map(this::entityToDTO)
                 .collect(Collectors.toList());
     }
 
-    public CategoryDTO obterPorId(Long id) {
+    public CategoryDTO getCategoryById(Long id) {
         return categoryRepository.findById(id)
                 .map(this::entityToDTO)
                 .orElse(null);
     }
 
-    public CategoryDTO criar(CategoryDTO dto) {
+    public CategoryDTO create(CategoryDTO dto) {
         Category category = new Category();
         category.setName(dto.getName());
         category.setType(dto.getType());
@@ -54,7 +54,7 @@ public class CategoryService {
         return entityToDTO(saved);
     }
 
-    public CategoryDTO atualizar(Long id, CategoryDTO dto) {
+    public CategoryDTO update(Long id, CategoryDTO dto) {
         Category category = categoryRepository.findById(id).orElse(null);
         if (category != null) {
             category.setName(dto.getName());
@@ -68,7 +68,7 @@ public class CategoryService {
         return null;
     }
 
-    public void deletar(Long id) {
+    public void delete(Long id) {
         categoryRepository.deleteById(id);
     }
 

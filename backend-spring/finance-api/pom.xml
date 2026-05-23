@@ -29,7 +29,6 @@
 	<properties>
 		<java.version>21</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.forceJavacToolchain>true</maven.compiler.forceJavacToolchain>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -124,14 +123,14 @@
 
         <!-- Compiler corrigido -->
         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.11.0</version>
-            <configuration>
-                <source>17</source>
-                <target>17</target>
-            </configuration>
-        </plugin>
+    		<groupId>org.apache.maven.plugins</groupId>
+    		<artifactId>maven-compiler-plugin</artifactId>
+    		<version>3.11.0</version>
+
+    		<configuration>
+        		<release>21</release>
+    		</configuration>
+		</plugin>
 
     </plugins>
     </build>

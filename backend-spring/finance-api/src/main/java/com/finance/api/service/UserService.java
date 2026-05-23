@@ -21,7 +21,7 @@ public class UserService {
     public List<UserDTO> listar() {
         return repository.findAll()
                 .stream()
-                .map(u -> new UserDTO(u.getId(), u.getName(), u.getEmail()))
+                .map(u -> new UserDTO(u.getId(), u.getName(), u.getEmail(), u.getProfileType()))
                 .toList();
     }
 
@@ -29,16 +29,37 @@ public class UserService {
         User user = new User();
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
+        user.setProfileType(dto.getProfileType()); 
         user.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
 
         User saved = repository.save(user);
 
-        return new UserDTO(saved.getId(), saved.getName(), saved.getEmail());
+        return new UserDTO(saved.getId(), saved.getName(), saved.getEmail(), saved.getProfileType());
+    }
+
+    public UserDTO atualizar(Long id, UserDTO updated) {
+        User user = repository.findById(id).orElseThrow();
+
+        if (updated.getName() != null) {
+            user.setName(updated.getName());
+        }
+
+        if (updated.getEmail() != null) {
+            user.setEmail(updated.getEmail());
+        }
+
+        if (updated.getProfileType() != null) {
+            user.setProfileType(updated.getProfileType());
+        }
+
+        User saved = repository.save(user);
+        
+        return new UserDTO(saved.getId(), saved.getName(), saved.getEmail(), saved.getProfileType());
     }
 
     public UserDTO obterPorId(Long id) {
         return repository.findById(id)
-                .map(u -> new UserDTO(u.getId(), u.getName(), u.getEmail()))
+                .map(u -> new UserDTO(u.getId(), u.getName(), u.getEmail(), u.getProfileType()))
                 .orElse(null);
     }
 
@@ -46,6 +67,10 @@ public class UserService {
         User user = repository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        return new UserDTO(user.getId(), user.getName(), user.getEmail());
+        return new UserDTO(user.getId(), user.getName(), user.getEmail(), user.getProfileType());
+    }
+
+    public void deletar(Long id) {
+        repository.deleteById(id);
     }
 }

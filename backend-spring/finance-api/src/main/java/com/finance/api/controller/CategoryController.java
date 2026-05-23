@@ -22,17 +22,27 @@ public class CategoryController {
     private UserRepository userRepository;
 
     @GetMapping
-    public List<CategoryDTO> listar(Authentication auth) {
+    public List<CategoryDTO> listCategoriesUser(Authentication auth) {
+
+        System.out.println("AUTH: " + auth);
+
         String email = auth.getName();
-        User user = userRepository.findByEmail(email).orElseThrow();
-        return service.listarPorUsuario(user.getId());
+
+        System.out.println("EMAIL AUTH: " + email);
+
+        User user = userRepository.findByEmail(email)
+            .orElseThrow();
+
+        System.out.println("USUARIO: " + user.getEmail());
+
+        return service.listCategoriesUser(user.getId());
     }
 
     @PostMapping
-    public CategoryDTO criar(@RequestBody CategoryDTO dto, Authentication auth) {
+    public CategoryDTO create(@RequestBody CategoryDTO dto, Authentication auth) {
         String email = auth.getName();
         User user = userRepository.findByEmail(email).orElseThrow();
         dto.setUserId(user.getId());
-        return service.criar(dto);
+        return service.create(dto);
     }
 }
