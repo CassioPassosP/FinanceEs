@@ -1,5 +1,6 @@
 package com.finance.api.controller;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import com.finance.api.dto.UserDTO;
 import com.finance.api.service.UserService;
 import org.springframework.security.core.Authentication;
@@ -18,13 +19,13 @@ public class UserController {
     private UserService service;
 
     @GetMapping
-    public List<UserDTO> listar() {
-        return service.listar();
+    public List<UserDTO> list() {
+        return service.list();
     }
 
-    @GetMapping("/{id}")  // ← ADICIONAR este endpoint
-    public ResponseEntity<UserDTO> obterPorId(@PathVariable Long id) {
-        UserDTO dto = service.obterPorId(id);
+    @GetMapping("/{id}")  
+    public ResponseEntity<UserDTO> getProfileById(@PathVariable Long id) {
+        UserDTO dto = service.getProfileById(id);
         if (dto != null) {
             return ResponseEntity.ok(dto);
         }
@@ -35,14 +36,27 @@ public class UserController {
     public ResponseEntity<UserDTO> getMe(Authentication authentication) {
         String email = authentication.getName();
 
-        UserDTO user = service.buscarPorEmail(email);
+        UserDTO user = service.getByEmail(email);
 
         return ResponseEntity.ok(user);
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> criar(@RequestBody UserDTO dto) {
-        UserDTO created = service.criar(dto);
+    public ResponseEntity<UserDTO> create(@RequestBody UserDTO dto) {
+        UserDTO created = service.createProfile(dto);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<UserDTO> update(@RequestBody UserDTO dto) {
+         String email = SecurityContextHolder
+            .getContext()
+            .getAuthentication()
+            .getName();
+
+        UserDTO updated = service.updateProfile(dto, email);
+
+        return ResponseEntity.ok(updated);
     }
 }

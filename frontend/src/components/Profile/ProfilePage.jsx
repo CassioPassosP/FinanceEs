@@ -7,9 +7,9 @@ export const ProfilePage = () => {
   const { profile, updateProfile } = useAuth();
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState({
-    full_name: '',
-    profile_type: 'moderado',
-    monthly_budget: 0
+    name: '',
+    profileType: 'moderado',
+    monthlyBudget: ''
   });
   const [saving, setSaving] = useState(false);
 
@@ -17,18 +17,19 @@ export const ProfilePage = () => {
   useEffect(() => {
     if (profile) {
       setFormData({
-        full_name: profile.full_name || '',
-        profile_type: profile.profile_type || 'moderado',
-        monthly_budget: profile.monthly_budget ?? 0
+        name: profile.name || '',
+        profileType: profile.profileType || 'moderado',
+        monthlyBudget: profile.monthlyBudget ?? ''
       });
     }
   }, [profile]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setFormData(prev => ({
-      ...prev,
-      [name]: name === 'monthly_budget' ? Number(value) : value
+    ...prev,
+    [name]: value
     }));
   };
 
@@ -39,7 +40,6 @@ export const ProfilePage = () => {
       await updateProfile(formData);
       setEditing(false);
     } catch (error) {
-      console.error('Error updating profile:', error);
       alert('Erro ao atualizar perfil');
     } finally {
       setSaving(false);
@@ -63,8 +63,8 @@ export const ProfilePage = () => {
     impulsivo: 'Você tende a gastar com mais facilidade'
   };
 
-  const profileLabel = profileTypeLabels[profile?.profile_type] || 'Moderado';
-  const profileDesc = profileTypeDescriptions[profile?.profile_type] || profileTypeDescriptions.moderado;
+  const profileLabel = profileTypeLabels[profile?.profileType] || 'Moderado';
+  const profileDesc = profileTypeDescriptions[profile?.profileType] || profileTypeDescriptions.moderado;
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -145,8 +145,8 @@ export const ProfilePage = () => {
               </label>
               <input
                 type="text"
-                name="full_name"
-                value={formData.full_name}
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                 required
@@ -158,8 +158,8 @@ export const ProfilePage = () => {
                 Perfil Financeiro
               </label>
               <select
-                name="profile_type"
-                value={formData.profile_type}
+                name="profileType"
+                value={formData.profileType}
                 onChange={handleChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               >
@@ -175,8 +175,8 @@ export const ProfilePage = () => {
               </label>
               <input
                 type="number"
-                name="monthly_budget"
-                value={formData.monthly_budget}
+                name="monthlyBudget"
+                value={formData.monthlyBudget}
                 onChange={handleChange}
                 step="0.01"
                 min="0"
@@ -191,9 +191,9 @@ export const ProfilePage = () => {
                   setEditing(false);
                   if (profile) {
                     setFormData({
-                      full_name: profile.full_name || '',
-                      profile_type: profile.profile_type || 'moderado',
-                      monthly_budget: profile.monthly_budget ?? 0
+                      name: profile.name || '',
+                      profileType: profile.profileType || 'moderado',
+                      monthlyBudget: profile.monthlyBudget ?? 0
                     });
                   }
                 }}
@@ -217,7 +217,7 @@ export const ProfilePage = () => {
               <label className="block text-sm font-medium text-gray-500 mb-1">
                 Nome Completo
               </label>
-              <p className="text-gray-900">{profile?.full_name}</p>
+              <p className="text-gray-900">{profile?.name}</p>
             </div>
 
             <div>
@@ -237,7 +237,7 @@ export const ProfilePage = () => {
                 {new Intl.NumberFormat('pt-BR', {
                   style: 'currency',
                   currency: 'BRL'
-                }).format(profile?.monthly_budget || 0)}
+                }).format(profile?.monthlyBudget || 0)}
               </p>
             </div>
           </div>
