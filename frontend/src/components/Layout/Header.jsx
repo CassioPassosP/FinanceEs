@@ -28,7 +28,7 @@ export const Header = ({ onNavigate, currentPage }) => {
             </div>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4">
             <button
               onClick={() => onNavigate('achievements')}
               className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition ${
@@ -53,7 +53,7 @@ export const Header = ({ onNavigate, currentPage }) => {
               )}
             </button>
 
-            <div className="flex items-center space-x-3 border-l border-gray-200 pl-4">
+            <div className="flex items-center space-x-2 sm:space-x-3 border-l border-gray-200 pl-2 sm:pl-4">
               <div className="text-right hidden sm:block">
                 <p className="text-sm font-medium text-gray-900">{profile?.full_name}</p>
                 <p className="text-xs text-gray-500">

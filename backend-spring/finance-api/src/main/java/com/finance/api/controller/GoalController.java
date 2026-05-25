@@ -16,22 +16,22 @@ public class GoalController {
     private GoalService service;
 
     @GetMapping
-    public List<Goal> listar(Authentication auth) {
-        return service.listar(auth.getName());
+    public List<Goal> listGoalsUser(Authentication auth) {
+        return service.listGoalsUser(auth.getName());
     }
 
     @PostMapping
-    public Goal criar(@RequestBody Goal goal, Authentication auth) {
-        return service.criar(goal, auth.getName());
+    public Goal create(@RequestBody Goal goal, Authentication auth) {
+        return service.create(goal, auth.getName());
     }
 
     @PutMapping("/{id}")
-    public Goal atualizar(@PathVariable Long id, @RequestBody Goal goal) {
-        return service.atualizar(id, goal);
+    public Goal update(@PathVariable Long id, @RequestBody Goal goal) {
+        return service.update(id, goal);
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
-        service.deletar(id);
+    public void delete(@PathVariable Long id) {
+        service.delete(id);
     }
 }

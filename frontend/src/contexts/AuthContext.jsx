@@ -35,10 +35,12 @@ export const AuthProvider = ({ children }) => {
       setUser({
         id: data.id,
         email: data.email,
+        userType: data.profile_type,
         name: data.full_name || data.name || '',
         profileType: data.profileType || 'moderado',
         monthlyBudget: data.monthlyBudget ?? 0
       });
+      
     } catch (err) {
       console.error('Erro ao carregar perfil:', err);
       setProfile(null);
@@ -156,7 +158,9 @@ export const AuthProvider = ({ children }) => {
   const updateProfile = async (payload) => {
     if (!token) throw new Error('Usuário não autenticado');
 
-    const res = await fetch(`${API}/users/me`, {
+    console.log(payload)
+
+    const res = await fetch(`${API}/users/${user?.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

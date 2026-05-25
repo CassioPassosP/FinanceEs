@@ -13,7 +13,6 @@ export const ProfilePage = () => {
   });
   const [saving, setSaving] = useState(false);
 
-  // sincroniza form assim que o profile vier do backend ou for atualizado
   useEffect(() => {
     if (profile) {
       setFormData({
@@ -23,7 +22,7 @@ export const ProfilePage = () => {
       });
     }
   }, [profile]);
-
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
 

@@ -19,12 +19,12 @@ public class GoalService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<Goal> listar(String email) {
+    public List<Goal> listGoalsUser(String email) {
         User user = userRepository.findByEmail(email).orElseThrow();
         return repository.findByUser(user);
     }
 
-    public Goal criar(Goal goal, String email) {
+    public Goal create(Goal goal, String email) {
         User user = userRepository.findByEmail(email).orElseThrow();
         goal.setUser(user);
         goal.setCurrentAmount(new BigDecimal("0.0"));
@@ -32,7 +32,7 @@ public class GoalService {
         return repository.save(goal);
     }
 
-    public Goal atualizar(Long id, Goal updated) {
+    public Goal update(Long id, Goal updated) {
         Goal goal = repository.findById(id).orElseThrow();
 
         if (updated.getTitle() != null) {
@@ -59,7 +59,7 @@ public class GoalService {
         return repository.findById(saved.getId()).orElseThrow();
     }
 
-    public void deletar(Long id) {
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 }
