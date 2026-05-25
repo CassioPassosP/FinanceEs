@@ -5,15 +5,17 @@ public class UserDTO {
     private String name;
     private String email;
     private String password;
-    private String profileType; 
+    private String profileType;
+    private Double monthlyBudget;
 
     public UserDTO() {}
 
-    public UserDTO(Long id, String name, String email, String profileType) {
+    public UserDTO(Long id, String name, String email, String profileType, Double monthlyBudget) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.profileType = profileType; 
+        this.profileType = profileType;
+        this.monthlyBudget = monthlyBudget;
     }
 
     public Long getId() { return id; }
@@ -28,6 +30,10 @@ public class UserDTO {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
+    public Double getMonthlyBudget() { return monthlyBudget; }
+    public void setMonthlyBudget(Double monthlyBudget) { this.monthlyBudget = monthlyBudget;}
+
     public String getProfileType() { return profileType; }
     public void setProfileType(String profileType) { this.profileType = profileType; }
+
 }

@@ -18,7 +18,6 @@ export const AuthProvider = ({ children }) => {
 
   const API = import.meta.env.VITE_API_URL; 
 
-  // Carrega /api/users/me e preenche user + profile
   const loadProfile = async (authToken) => {
     try {
       const res = await fetch(`${API}/users/me`, {
@@ -38,6 +37,8 @@ export const AuthProvider = ({ children }) => {
         email: data.email,
         userType: data.profile_type,
         name: data.full_name || data.name || '',
+        profileType: data.profileType || 'moderado',
+        monthlyBudget: data.monthlyBudget ?? 0
       });
       
     } catch (err) {
@@ -128,7 +129,8 @@ export const AuthProvider = ({ children }) => {
         body: JSON.stringify({
           name: fullName,
           email,
-          profile_type: profileType,
+          profileType: profileType,
+          monthlyBudget: 0,
           password,
         }),
       });
@@ -167,19 +169,26 @@ export const AuthProvider = ({ children }) => {
       body: JSON.stringify(payload),
     });
 
-    const data = await res.json();
+    let data = {};
+
+    try {
+      data = await res.json();
+    } catch {
+      data = {};
+    }
 
     if (!res.ok) {
       throw new Error(data.message || 'Erro ao atualizar perfil');
     }
 
-    // Atualiza estado global
     setProfile(data);
+
     setUser((prev) => ({
       ...(prev || {}),
       id: data.id,
       email: data.email,
-      userType: data.profile_type,
+      profileType: data.profileType || 'moderado',
+      monthlyBudget: data.monthlyBudget ?? 0,
       name: data.full_name || data.name || '',
     }));
 

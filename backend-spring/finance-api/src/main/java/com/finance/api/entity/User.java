@@ -31,5 +31,8 @@ public class User {
     private Integer currentLevel = 1;
 
     @Column(name = "profile_type")
-    private String profileType = "moderado"; // Default profile type
+    private String profileType = "moderado";
+
+    @Column(name = "monthly_budget")
+    private Double monthlyBudget;
 }
