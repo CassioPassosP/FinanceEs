@@ -43,7 +43,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         http
             .cors(cors -> {})
             .csrf(csrf -> csrf.disable())
@@ -51,13 +50,6 @@ public class SecurityConfig {
                 .requestMatchers("/auth/**").permitAll()
                 .anyRequest().permitAll()
             )
-                // .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                // .requestMatchers("/auth/**").permitAll()
-                // .requestMatchers("/transactions/**").authenticated()
-                // .requestMatchers("/goals/**").authenticated()
-                // .requestMatchers("/categories/**").authenticated()
-                // .anyRequest().authenticated()
-                // .anyRequest().permitAll()
             .addFilterBefore(jwFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
