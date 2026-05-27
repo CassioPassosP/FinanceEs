@@ -1,7 +1,10 @@
 package com.finance.api.service;
 
+import com.finance.api.dto.TransactionDTO;
+import com.finance.api.entity.Category;
 import com.finance.api.entity.Transaction;
 import com.finance.api.entity.User;
+import com.finance.api.repository.CategoryRepository;
 import com.finance.api.repository.TransactionRepository;
 import com.finance.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,18 +21,109 @@ public class TransactionService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<Transaction> listar(String email) {
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    public List<TransactionDTO> list(String email) {
         User user = userRepository.findByEmail(email).orElseThrow();
-        return repository.findByUser(user);
+        return repository.findByUserOrderByDateDesc(user).stream()
+                .map(t -> new TransactionDTO(
+                    t.getId(),
+                    t.getType(),
+                    t.getAmount(),
+                    t.getDescription(),
+                    t.getDate(),
+                    t.getCategory() != null
+                        ? t.getCategory().getId()
+                        : null,
+                    t.getUser() != null
+                        ? t.getUser().getId()
+                        : null
+                ))
+                .collect(java.util.stream.Collectors.toList());
     }
 
-    public Transaction criar(Transaction transaction, String email) {
+    public TransactionDTO create(TransactionDTO dto, String email) {
+
         User user = userRepository.findByEmail(email).orElseThrow();
+
+        Category category = categoryRepository
+                .findById(dto.getCategoryId())
+                .orElseThrow();
+
+        Transaction transaction = new Transaction();
+
+        transaction.setType(dto.getType());
+        transaction.setAmount(dto.getAmount());
+        transaction.setDescription(dto.getDescription());
+        transaction.setDate(dto.getDate());
+
         transaction.setUser(user);
-        return repository.save(transaction);
+        transaction.setCategory(category);
+
+        Transaction saved = repository.save(transaction);
+
+        return new TransactionDTO(
+            saved.getId(),
+            saved.getType(),
+            saved.getAmount(),
+            saved.getDescription(),
+            saved.getDate(),
+            saved.getCategory() != null
+                ? saved.getCategory().getId()
+                : null  ,
+            saved.getUser() != null
+                ? saved.getUser().getId()
+                : null
+        );
     }
 
-    public void deletar(Long id) {
+    public TransactionDTO update(Long id, TransactionDTO dto) {
+
+        Transaction transaction = repository.findById(id)
+                .orElseThrow();
+
+        if (dto.getCategoryId() != null) {
+
+            Category category = categoryRepository
+                    .findById(dto.getCategoryId())
+                    .orElseThrow();
+
+            transaction.setCategory(category);
+        }
+
+        if (dto.getType() != null) {
+            transaction.setType(dto.getType());
+        }
+
+        if (dto.getAmount() != null) {
+            transaction.setAmount(dto.getAmount());
+        }
+
+        if (dto.getDescription() != null &&
+            !dto.getDescription().trim().isEmpty()) {
+
+            transaction.setDescription(dto.getDescription());
+        }
+
+        if (dto.getDate() != null) {
+            transaction.setDate(dto.getDate());
+        }
+
+        Transaction updated = repository.save(transaction);
+
+        return new TransactionDTO(
+            updated.getId(),
+            updated.getType(),
+            updated.getAmount(),
+            updated.getDescription(),
+            updated.getDate(),
+            updated.getCategory().getId(),
+            updated.getUser().getId()
+        );
+    }
+
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 }

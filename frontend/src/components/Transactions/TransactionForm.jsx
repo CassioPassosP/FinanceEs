@@ -6,7 +6,7 @@ export const TransactionForm = ({ transaction, onSubmit, onCancel }) => {
   const { categories } = useCategories();
   const [formData, setFormData] = useState({
     type: 'expense',
-    category_id: '',
+    categoryId: '',
     amount: '',
     description: '',
     date: new Date().toISOString().split('T')[0]
@@ -14,7 +14,6 @@ export const TransactionForm = ({ transaction, onSubmit, onCancel }) => {
 
   useEffect(() => {
     if (transaction) {
-      // 👇 aqui é a única mudança de verdade: tratar a data
       const rawDate = transaction.date;
       const dateOnly = rawDate
         ? String(rawDate).split('T')[0]                // pega só YYYY-MM-DD
@@ -22,7 +21,7 @@ export const TransactionForm = ({ transaction, onSubmit, onCancel }) => {
 
       setFormData({
         type: transaction.type,
-        category_id: transaction.category_id,
+        categoryId: transaction.category?.id || '',
         amount: transaction.amount,
         description: transaction.description,
         date: dateOnly
@@ -68,7 +67,7 @@ export const TransactionForm = ({ transaction, onSubmit, onCancel }) => {
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
-                onClick={() => setFormData(prev => ({ ...prev, type: 'income', category_id: '' }))}
+                onClick={() => setFormData(prev => ({ ...prev, type: 'income', categoryId: '' }))}
                 className={`p-3 rounded-lg border-2 font-medium transition ${
                   formData.type === 'income'
                     ? 'border-green-500 bg-green-50 text-green-700'
@@ -79,7 +78,7 @@ export const TransactionForm = ({ transaction, onSubmit, onCancel }) => {
               </button>
               <button
                 type="button"
-                onClick={() => setFormData(prev => ({ ...prev, type: 'expense', category_id: '' }))}
+                onClick={() => setFormData(prev => ({ ...prev, type: 'expense', categoryId: '' }))}
                 className={`p-3 rounded-lg border-2 font-medium transition ${
                   formData.type === 'expense'
                     ? 'border-red-500 bg-red-50 text-red-700'
@@ -96,8 +95,8 @@ export const TransactionForm = ({ transaction, onSubmit, onCancel }) => {
               Categoria
             </label>
             <select
-              name="category_id"
-              value={formData.category_id}
+              name="categoryId"
+              value={formData.categoryId}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               required
