@@ -14,7 +14,6 @@ export const TransactionForm = ({ transaction, onSubmit, onCancel }) => {
 
   useEffect(() => {
     if (transaction) {
-      // 👇 aqui é a única mudança de verdade: tratar a data
       const rawDate = transaction.date;
       const dateOnly = rawDate
         ? String(rawDate).split('T')[0]                // pega só YYYY-MM-DD
@@ -22,7 +21,7 @@ export const TransactionForm = ({ transaction, onSubmit, onCancel }) => {
 
       setFormData({
         type: transaction.type,
-        categoryId: transaction.category_id,
+        categoryId: transaction.category?.id || '',
         amount: transaction.amount,
         description: transaction.description,
         date: dateOnly

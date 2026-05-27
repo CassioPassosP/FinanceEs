@@ -13,7 +13,7 @@ public class TransactionDTO {
     private Long categoryId;
 
     public TransactionDTO() {}
-
+    
     public TransactionDTO(Long id, String type, BigDecimal amount, String description, LocalDateTime date, Long userId, Long categoryId) {
         this.id = id;
         this.type = type;
@@ -24,25 +24,25 @@ public class TransactionDTO {
         this.categoryId = categoryId;
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    
-    public String getType() { return type; }
-    public void setType(String type) { this.type = type; }  
-    
-    public BigDecimal getAmount() { return amount; }
-    public void setAmount(BigDecimal amount) { this.amount = amount; }
+    public Long getId() {return id;}
+    public void setId(Long id) {this.id = id;}
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public String getType() {return type;}
+    public void setType(String type) {this.type = type;}
 
-    public LocalDateTime getDate() { return date; }
-    public void setDate(LocalDateTime date) { this.date = date; }
+    public BigDecimal getAmount() {return amount;}
+    public void setAmount(BigDecimal amount) {this.amount = amount;}
 
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
+    public String getDescription() {return description;}
+    public void setDescription(String description) {this.description = description;}
 
-    public Long getCategoryId() { return categoryId; }
-    public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
+    public LocalDateTime getDate() {return date;}
+    public void setDate(LocalDateTime date) {this.date = date;}
+
+    public Long getUserId() {return userId;}
+    public void setUserId(Long userId) {this.userId = userId;}
+
+    public Long getCategoryId() {return categoryId;}
+    public void setCategoryId(Long categoryId) {this.categoryId = categoryId;}
 
 }

@@ -1,5 +1,7 @@
 package com.finance.api.controller;
 
+import org.springframework.http.ResponseEntity;
+import com.finance.api.dto.TransactionDTO;
 import com.finance.api.entity.Transaction;
 import com.finance.api.dto.TransactionDTO;
 import com.finance.api.service.TransactionService;
@@ -17,29 +19,26 @@ public class TransactionController {
     private TransactionService service;
 
     @GetMapping
-    public List<TransactionDTO> listTransactionsUser(Authentication auth) {
-        return service.listTransactionsUser(auth.getName());
+    public List<TransactionDTO> list(Authentication auth) {
+        return service.list(auth.getName());
     }
 
     @PostMapping
-    public TransactionDTO create(@RequestBody TransactionDTO transaction, Authentication auth) {
-        return service.create(transaction, auth.getName());
-    }
-
-    @PutMapping("/{id}")
-    public TransactionDTO update(
-        @PathVariable Long id,
-        @RequestBody TransactionDTO transaction,
-        Authentication auth
-    ) {
-        return service.update(id, transaction, auth.getName());
+    public ResponseEntity<TransactionDTO> create(@RequestBody TransactionDTO dto, Authentication auth) {
+        return ResponseEntity.ok(service.create(dto, auth.getName()));
     }
 
     @DeleteMapping("/{id}")
-    public void delete(
+    public void delete(@PathVariable Long id) {
+        service.delete(id);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TransactionDTO> update(
         @PathVariable Long id,
-        Authentication auth
+        @RequestBody TransactionDTO dto
     ) {
-        service.delete(id, auth.getName());
+
+        return ResponseEntity.ok(service.update(id, dto));
     }
 }

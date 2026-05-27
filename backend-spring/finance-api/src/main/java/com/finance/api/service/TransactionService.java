@@ -1,10 +1,11 @@
 package com.finance.api.service;
 
-import com.finance.api.repository.CategoryRepository;
+import com.finance.api.dto.TransactionDTO;
 import com.finance.api.entity.Category;
 import com.finance.api.entity.Transaction;
 import com.finance.api.dto.TransactionDTO;
 import com.finance.api.entity.User;
+import com.finance.api.repository.CategoryRepository;
 import com.finance.api.repository.TransactionRepository;
 import com.finance.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,93 +25,109 @@ public class TransactionService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<TransactionDTO> listTransactionsUser(String email) {
+    @Autowired
+    private CategoryRepository categoryRepository;
 
-    User user = userRepository.findByEmail(email)
-        .orElseThrow();
-
-    List<Transaction> transactions = repository.findByUser(user);
-
-    transactions.forEach(t -> {
-    System.out.println("TRANSACAO: " + t.getId());
-
-    System.out.println("USER: " + t.getUser());
-
-    System.out.println("CATEGORY: " + t.getCategory());
-    });
-
-    return transactions.stream()
-        .map(t -> new TransactionDTO(
-            t.getId(),
-            t.getType(),
-            t.getAmount(),
-            t.getDescription(),
-            t.getDate(),
-            t.getUser() != null ? t.getUser().getId() : null,
-            t.getCategory() != null ? t.getCategory().getId() : null
-        ))
-        .toList();
+    public List<TransactionDTO> list(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow();
+        return repository.findByUserOrderByDateDesc(user).stream()
+                .map(t -> new TransactionDTO(
+                    t.getId(),
+                    t.getType(),
+                    t.getAmount(),
+                    t.getDescription(),
+                    t.getDate(),
+                    t.getCategory() != null
+                        ? t.getCategory().getId()
+                        : null,
+                    t.getUser() != null
+                        ? t.getUser().getId()
+                        : null
+                ))
+                .collect(java.util.stream.Collectors.toList());
     }
 
     public TransactionDTO create(TransactionDTO dto, String email) {
-        Transaction entity = new Transaction();
-        User user = userRepository.findByEmail(email)
-            .orElseThrow();
 
-        entity.setUser(user);
-        entity.setDate(dto.getDate());
-        entity.setType(dto.getType());
-        entity.setAmount(dto.getAmount());
-        entity.setDescription(dto.getDescription());
+        User user = userRepository.findByEmail(email).orElseThrow();
+
         Category category = categoryRepository
-            .findById(dto.getCategoryId())
-            .orElseThrow();
+                .findById(dto.getCategoryId())
+                .orElseThrow();
 
-        entity.setCategory(category);
+        Transaction transaction = new Transaction();
 
-        Transaction saved = repository.save(entity);
+        transaction.setType(dto.getType());
+        transaction.setAmount(dto.getAmount());
+        transaction.setDescription(dto.getDescription());
+        transaction.setDate(dto.getDate());
 
-        return new TransactionDTO(saved.getId(), saved.getType(), saved.getAmount(), saved.getDescription(), saved.getDate(), saved.getUser().getId(), saved.getCategory().getId());
+        transaction.setUser(user);
+        transaction.setCategory(category);
+
+        Transaction saved = repository.save(transaction);
+
+        return new TransactionDTO(
+            saved.getId(),
+            saved.getType(),
+            saved.getAmount(),
+            saved.getDescription(),
+            saved.getDate(),
+            saved.getCategory() != null
+                ? saved.getCategory().getId()
+                : null  ,
+            saved.getUser() != null
+                ? saved.getUser().getId()
+                : null
+        );
     }
 
-    public TransactionDTO update(Long id, TransactionDTO nova, String email) {
-        User user = userRepository.findByEmail(email)
-            .orElseThrow();
+    public TransactionDTO update(Long id, TransactionDTO dto) {
 
-        Transaction entity = repository.findById(id).orElseThrow();
+        Transaction transaction = repository.findById(id)
+                .orElseThrow();
 
-        if (!entity.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("Acesso negado");
+        if (dto.getCategoryId() != null) {
+
+            Category category = categoryRepository
+                    .findById(dto.getCategoryId())
+                    .orElseThrow();
+
+            transaction.setCategory(category);
         }
 
-        entity.setDate(nova.getDate());
-        entity.setType(nova.getType());
-        entity.setAmount(nova.getAmount());
-        entity.setDescription(nova.getDescription());
-        
-        Category category = categoryRepository
-            .findById(nova.getCategoryId())
-            .orElseThrow();
-        
-        entity.setCategory(category);
+        if (dto.getType() != null) {
+            transaction.setType(dto.getType());
+        }
 
-        Transaction updated = repository.save(entity);
+        if (dto.getAmount() != null) {
+            transaction.setAmount(dto.getAmount());
+        }
 
-        return new TransactionDTO(updated.getId(), updated.getType(), updated.getAmount(), updated.getDescription(), updated.getDate(), updated.getUser().getId(), updated.getCategory().getId());
+        if (dto.getDescription() != null &&
+            !dto.getDescription().trim().isEmpty()) {
+
+            transaction.setDescription(dto.getDescription());
+        }
+
+        if (dto.getDate() != null) {
+            transaction.setDate(dto.getDate());
+        }
+
+        Transaction updated = repository.save(transaction);
+
+        return new TransactionDTO(
+            updated.getId(),
+            updated.getType(),
+            updated.getAmount(),
+            updated.getDescription(),
+            updated.getDate(),
+            updated.getCategory().getId(),
+            updated.getUser().getId()
+        );
     }
 
-    public void delete(Long id, String email) {
-
-        User user = userRepository.findByEmail(email)
-            .orElseThrow();
-
-        Transaction entity = repository.findById(id)
-            .orElseThrow();
-
-        if (!entity.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("Acesso negado");
-        }
-
-        repository.delete(entity);
+    public void delete(Long id) {
+        repository.deleteById(id);
     }
 }

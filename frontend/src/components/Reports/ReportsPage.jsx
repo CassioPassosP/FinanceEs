@@ -86,6 +86,8 @@ export const ReportsPage = () => {
     monthTransactions.forEach((t) => {
       const cat = categoriesMap.get(t.category_id);
       const categoryName = cat?.name || 'Outros';
+      // console.log(t.category_id, typeof t.category_id);
+      // console.log(categories);
       const color = cat?.color || '#6B7280';
 
       if (!expensesByCategory[categoryName]) {
@@ -119,7 +121,7 @@ export const ReportsPage = () => {
   const categoryLabels = Object.keys(categoryData);
   const categoryValues = Object.values(categoryData).map(c => c.amount);
 
-  // paleta de cores fixa (pode ajustar se quiser)
+  // paleta de cores fixa 
   const palette = [
     '#22c55e', // verde
     '#ef4444', // vermelho

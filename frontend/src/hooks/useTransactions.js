@@ -26,7 +26,7 @@ export const useTransactions = () => {
       method: 'POST',
       body: JSON.stringify(payload),
     });
-
+    
     if (!res.ok) {
       console.error('Erro ao criar transação:', res.status, res.data);
       throw new Error(res.data?.message || 'Erro ao criar transação');
