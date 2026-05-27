@@ -1,5 +1,7 @@
 package com.finance.api.security;
 
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +15,7 @@ import java.util.List;
 
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
     private final JwFilter jwFilter;
@@ -21,7 +24,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedOriginPatterns(List.of("*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
@@ -45,19 +48,25 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            .cors(cors -> {})
+            .securityMatcher("/**")
+
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll()
-                .anyRequest().permitAll()
+
+            .httpBasic(httpBasic -> httpBasic.disable())
+
+            .formLogin(form -> form.disable())
+
+            .sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
-                // .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                // .requestMatchers("/auth/**").permitAll()
-                // .requestMatchers("/transactions/**").authenticated()
-                // .requestMatchers("/goals/**").authenticated()
-                // .requestMatchers("/categories/**").authenticated()
-                // .anyRequest().authenticated()
-                // .anyRequest().permitAll()
+
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers("/auth/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                .anyRequest().authenticated()
+            )
             .addFilterBefore(jwFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

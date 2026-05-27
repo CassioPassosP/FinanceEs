@@ -3,6 +3,7 @@ package com.finance.api.service;
 import com.finance.api.dto.TransactionDTO;
 import com.finance.api.entity.Category;
 import com.finance.api.entity.Transaction;
+import com.finance.api.dto.TransactionDTO;
 import com.finance.api.entity.User;
 import com.finance.api.repository.CategoryRepository;
 import com.finance.api.repository.TransactionRepository;
@@ -14,6 +15,9 @@ import java.util.List;
 
 @Service
 public class TransactionService {
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private TransactionRepository repository;
