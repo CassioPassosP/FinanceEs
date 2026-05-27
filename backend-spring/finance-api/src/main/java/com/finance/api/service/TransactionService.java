@@ -25,9 +25,6 @@ public class TransactionService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
-
     public List<TransactionDTO> list(String email) {
         User user = userRepository.findByEmail(email).orElseThrow();
         return repository.findByUserOrderByDateDesc(user).stream()
