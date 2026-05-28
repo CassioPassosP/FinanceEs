@@ -34,11 +34,11 @@ public class TransactionService {
                     t.getAmount(),
                     t.getDescription(),
                     t.getDate(),
-                    t.getCategory() != null
-                        ? t.getCategory().getId()
-                        : null,
                     t.getUser() != null
                         ? t.getUser().getId()
+                        : null,
+                    t.getCategory() != null
+                        ? t.getCategory().getId()
                         : null
                 ))
                 .collect(java.util.stream.Collectors.toList());
@@ -70,12 +70,12 @@ public class TransactionService {
             saved.getAmount(),
             saved.getDescription(),
             saved.getDate(),
-            saved.getCategory() != null
-                ? saved.getCategory().getId()
-                : null  ,
             saved.getUser() != null
                 ? saved.getUser().getId()
-                : null
+                : null,
+            saved.getCategory() != null
+                ? saved.getCategory().getId()
+                : null  
         );
     }
 
@@ -119,8 +119,8 @@ public class TransactionService {
             updated.getAmount(),
             updated.getDescription(),
             updated.getDate(),
-            updated.getCategory().getId(),
-            updated.getUser().getId()
+            updated.getUser().getId(),
+            updated.getCategory().getId()
         );
     }
 

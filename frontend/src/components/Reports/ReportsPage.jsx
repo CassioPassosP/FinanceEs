@@ -84,12 +84,10 @@ export const ReportsPage = () => {
     const expensesByCategory = {};
 
     monthTransactions.forEach((t) => {
-      const cat = categoriesMap.get(t.category_id);
+      const cat = categories.find((c) => c.id === t.categoryId);
       const categoryName = cat?.name || 'Outros';
-      // console.log(t.category_id, typeof t.category_id);
-      // console.log(categories);
       const color = cat?.color || '#6B7280';
-
+      
       if (!expensesByCategory[categoryName]) {
         expensesByCategory[categoryName] = {
           amount: 0,
