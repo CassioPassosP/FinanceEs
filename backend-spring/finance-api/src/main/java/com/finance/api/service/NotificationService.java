@@ -1,7 +1,7 @@
 package com.finance.api.service;
 
-import com.finance.api.entity.Notification;
-import com.finance.api.entity.User;
+import com.finance.api.entity.NotificationEntity;
+import com.finance.api.entity.UserEntity;
 import com.finance.api.repository.NotificationRepository;
 import com.finance.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +19,15 @@ public class NotificationService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<Notification> listar(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow();
+    public List<NotificationEntity> listar(String email) {
+        UserEntity user = userRepository.findByEmail(email).orElseThrow();
         return repository.findByUser(user);
     }
 
-    public Notification criar(String message, String email) {
-        User user = userRepository.findByEmail(email).orElseThrow();
+    public NotificationEntity criar(String message, String email) {
+        UserEntity user = userRepository.findByEmail(email).orElseThrow();
 
-        Notification n = new Notification();
+        NotificationEntity n = new NotificationEntity();
         n.setMessage(message);
         n.setRead(false);
         n.setCreatedAt(LocalDateTime.now());
@@ -37,7 +37,7 @@ public class NotificationService {
     }
 
     public void marcarComoLida(Long id) {
-        Notification n = repository.findById(id).orElseThrow();
+        NotificationEntity n = repository.findById(id).orElseThrow();
         n.setRead(true);
         repository.save(n);
     }

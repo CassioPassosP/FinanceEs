@@ -1,12 +1,14 @@
 package com.finance.api.service;
 
 import java.math.BigDecimal;
-import com.finance.api.entity.Goal;
-import com.finance.api.entity.User;
+import com.finance.api.entity.GoalEntity;
+import com.finance.api.entity.UserEntity;
 import com.finance.api.repository.GoalRepository;
 import com.finance.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import java.util.List;
 
@@ -19,21 +21,21 @@ public class GoalService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<Goal> listGoalsUser(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow();
+    public List<GoalEntity> listGoalsUser(String email) {
+        UserEntity user = userRepository.findByEmail(email).orElseThrow();
         return repository.findByUser(user);
     }
 
-    public Goal create(Goal goal, String email) {
-        User user = userRepository.findByEmail(email).orElseThrow();
+    public GoalEntity create(GoalEntity goal, String email) {
+        UserEntity user = userRepository.findByEmail(email).orElseThrow();
         goal.setUser(user);
         goal.setCurrentAmount(new BigDecimal("0.0"));
         goal.setStatus("active");
         return repository.save(goal);
     }
 
-    public Goal update(Long id, Goal updated) {
-        Goal goal = repository.findById(id).orElseThrow();
+    public GoalEntity update(Long id, GoalEntity updated) {
+        GoalEntity goal = repository.findById(id).orElseThrow();
 
         if (updated.getTitle() != null) {
             goal.setTitle(updated.getTitle());
@@ -55,7 +57,7 @@ public class GoalService {
             goal.setDueDate(updated.getDueDate());
         }
 
-        Goal saved = repository.save(goal);
+        GoalEntity saved = repository.save(goal);
         return repository.findById(saved.getId()).orElseThrow();
     }
 

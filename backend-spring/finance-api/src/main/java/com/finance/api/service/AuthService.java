@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.finance.api.repository.UserRepository;
 import com.finance.api.security.JwtService;
 import com.finance.api.dto.LoginDTO;
-import com.finance.api.entity.User;
+import com.finance.api.entity.UserEntity;
 import java.util.Map;
 
 @Service
@@ -23,7 +23,7 @@ public class AuthService {
 
     public Map<String, String> login(LoginDTO dto) {
 
-        User user = repository.findByEmail(dto.getEmail())
+        UserEntity user = repository.findByEmail(dto.getEmail())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         if (!passwordEncoder.matches(dto.getPassword(), user.getPasswordHash())) {

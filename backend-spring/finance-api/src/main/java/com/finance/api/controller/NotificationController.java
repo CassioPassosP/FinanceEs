@@ -1,6 +1,6 @@
 package com.finance.api.controller;
 
-import com.finance.api.entity.Notification;
+import com.finance.api.entity.NotificationEntity;
 import com.finance.api.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -16,12 +16,12 @@ public class NotificationController {
     private NotificationService service;
 
     @GetMapping
-    public List<Notification> listar(Authentication auth) {
+    public List<NotificationEntity> listar(Authentication auth) {
         return service.listar(auth.getName());
     }
 
     @PostMapping
-    public Notification criar(@RequestBody String message, Authentication auth) {
+    public NotificationEntity criar(@RequestBody String message, Authentication auth) {
         return service.criar(message, auth.getName());
     }
 
