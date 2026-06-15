@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { authFetch } from '../lib/api';
+import { useAuth } from '../contexts/AuthContext';
 
 // Normaliza os dados do backend
 function normalizeGoal(raw) {
@@ -17,6 +18,7 @@ function normalizeGoal(raw) {
 
 export function useGoals() {
   const [goals, setGoals] = useState([]);
+  const { refreshProfile } = useAuth();
 
   useEffect(() => {
     loadGoals();
@@ -43,6 +45,9 @@ export function useGoals() {
     });
 
     if (res.ok) {
+
+      await refreshProfile();
+
       setGoals((prev) => [...prev, normalizeGoal(res.data)]);
     }
   };

@@ -23,6 +23,9 @@ public class TransactionService {
     private TransactionRepository repository;
 
     @Autowired
+    private GamificationService gamificationService;
+
+    @Autowired
     private UserRepository userRepository;
 
     public List<TransactionDTO> list(String email) {
@@ -63,6 +66,20 @@ public class TransactionService {
         transaction.setCategory(category);
 
         TransactionEntity saved = repository.save(transaction);
+
+        gamificationService.addPoints(
+            user,
+            gamificationService.calculateTransactionPoints(dto.getType())
+        );
+
+        // gamificationService.unlockAchievement(
+        //     user,
+        //     dto.getType().equalsIgnoreCase("INCOME")
+        //         ? com.finance.api.model.TypeAchievement.FIRST_INCOME
+        //         : com.finance.api.model.TypeAchievement.FIRST_EXPENSE
+        // );
+
+        userRepository.save(user);
 
         return new TransactionDTO(
             saved.getId(),

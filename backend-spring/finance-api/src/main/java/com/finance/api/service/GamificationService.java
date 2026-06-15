@@ -9,15 +9,7 @@ public class GamificationService {
 
     public int calculateLevel(int totalPoints) {
 
-        if (totalPoints >= 3000) return 8;
-        if (totalPoints >= 2200) return 7;
-        if (totalPoints >= 1500) return 6;
-        if (totalPoints >= 1000) return 5;
-        if (totalPoints >= 500) return 4;
-        if (totalPoints >= 250) return 3;
-        if (totalPoints >= 100) return 2;
-
-        return 1;
+        return (totalPoints / 100) + 1;
     }
 
     public int calculateTransactionPoints(String type) {

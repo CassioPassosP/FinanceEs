@@ -18,6 +18,11 @@ export const AuthProvider = ({ children }) => {
 
   const API = import.meta.env.VITE_API_URL; 
 
+  const refreshProfile = async () => {
+    if (!token) return;
+    await loadProfile(token);
+  };
+
   const loadProfile = async (authToken) => {
     try {
       const res = await fetch(`${API}/users/me`, {
@@ -32,11 +37,14 @@ export const AuthProvider = ({ children }) => {
 
       const data = await res.json();
       setProfile(data);
+      console.log(data);
       setUser({
         id: data.id,
+        currentLevel: data.currentLevel,
         email: data.email,
         userType: data.profile_type,
         name: data.full_name || data.name || '',
+        totalPoints: data.totalPoints || 0,
         profileType: data.profileType || 'moderado',
         monthlyBudget: data.monthlyBudget ?? 0
       });
@@ -128,7 +136,9 @@ export const AuthProvider = ({ children }) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: fullName,
+          currentLevel: 1,
           email,
+          totalPoints: 0,
           profileType: profileType,
           monthlyBudget: 0,
           password,
@@ -186,7 +196,9 @@ export const AuthProvider = ({ children }) => {
     setUser((prev) => ({
       ...(prev || {}),
       id: data.id,
+      currentLevel: data.currentLevel,
       email: data.email,
+      totalPoints: data.totalPoints || 0,
       profileType: data.profileType || 'moderado',
       monthlyBudget: data.monthlyBudget ?? 0,
       name: data.full_name || data.name || '',
@@ -205,6 +217,7 @@ export const AuthProvider = ({ children }) => {
     signOut,
     signUp,
     updateProfile,
+    refreshProfile,
     setUser,
     setProfile,
   };

@@ -1,5 +1,6 @@
 package com.finance.api.service;
 
+import com.finance.api.model.TypeAchievement;
 import java.math.BigDecimal;
 import com.finance.api.entity.GoalEntity;
 import com.finance.api.entity.UserEntity;
@@ -19,6 +20,9 @@ public class GoalService {
     private GoalRepository repository;
 
     @Autowired
+    private GamificationService gamificationService;
+
+    @Autowired
     private UserRepository userRepository;
 
     public List<GoalEntity> listGoalsUser(String email) {
@@ -31,6 +35,19 @@ public class GoalService {
         goal.setUser(user);
         goal.setCurrentAmount(new BigDecimal("0.0"));
         goal.setStatus("active");
+
+        gamificationService.addPoints(
+            user,
+            10
+        );
+
+        // gamificationService.unlockAchievement(
+        //     user,
+        //     com.finance.api.model.TypeAchievement.FIRST_FINANCIAL_GOAL
+        // );
+
+        userRepository.save(user);
+
         return repository.save(goal);
     }
 
