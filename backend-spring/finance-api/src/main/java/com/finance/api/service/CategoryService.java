@@ -1,8 +1,8 @@
 package com.finance.api.service;
 
 import com.finance.api.dto.CategoryDTO;
-import com.finance.api.entity.Category;
-import com.finance.api.entity.User;
+import com.finance.api.entity.CategoryEntity;
+import com.finance.api.entity.UserEntity;
 import com.finance.api.repository.CategoryRepository;
 import com.finance.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,30 +39,30 @@ public class CategoryService {
     }
 
     public CategoryDTO create(CategoryDTO dto) {
-        Category category = new Category();
+        CategoryEntity category = new CategoryEntity();
         category.setName(dto.getName());
         category.setType(dto.getType());
         category.setColor(dto.getColor());
         category.setIcon(dto.getIcon());
 
         if (dto.getUserId() != null) {
-            User user = userRepository.findById(dto.getUserId()).orElse(null);
+            UserEntity user = userRepository.findById(dto.getUserId()).orElse(null);
             category.setUser(user);
         }
 
-        Category saved = categoryRepository.save(category);
+        CategoryEntity saved = categoryRepository.save(category);
         return entityToDTO(saved);
     }
 
     public CategoryDTO update(Long id, CategoryDTO dto) {
-        Category category = categoryRepository.findById(id).orElse(null);
+        CategoryEntity category = categoryRepository.findById(id).orElse(null);
         if (category != null) {
             category.setName(dto.getName());
             category.setType(dto.getType());
             category.setColor(dto.getColor());
             category.setIcon(dto.getIcon());
 
-            Category updated = categoryRepository.save(category);
+            CategoryEntity updated = categoryRepository.save(category);
             return entityToDTO(updated);
         }
         return null;
@@ -72,7 +72,7 @@ public class CategoryService {
         categoryRepository.deleteById(id);
     }
 
-    private CategoryDTO entityToDTO(Category category) {
+    private CategoryDTO entityToDTO(CategoryEntity category) {
         return new CategoryDTO(
                 category.getId(),
                 category.getName(),

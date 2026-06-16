@@ -7,7 +7,9 @@ export const ProfilePage = () => {
   const { profile, updateProfile } = useAuth();
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState({
+    currentLevel: 1,
     name: '',
+    totalPoints: '',
     profileType: 'moderado',
     monthlyBudget: ''
   });
@@ -16,7 +18,9 @@ export const ProfilePage = () => {
   useEffect(() => {
     if (profile) {
       setFormData({
+        currentLevel: profile.currentLevel || 1,
         name: profile.name || '',
+        totalPoints: profile.totalPoints ?? '',
         profileType: profile.profileType || 'moderado',
         monthlyBudget: profile.monthlyBudget ?? ''
       });
@@ -45,8 +49,8 @@ export const ProfilePage = () => {
     }
   };
 
-  const totalPoints = profile?.total_points ?? 0;
-  const currentLevel = profile?.current_level ?? 1;
+  const totalPoints = profile?.totalPoints ?? 0;
+  const currentLevel = profile?.currentLevel ?? 1;
   const levelProgress = ((totalPoints % 100) / 100) * 100;
   const pointsToNextLevel = 100 - (totalPoints % 100);
 

@@ -1,10 +1,13 @@
 // frontend/src/hooks/useTransactions.js
 import { useEffect, useState } from 'react';
 import { authFetch } from '../lib/api';
+import { useAuth } from '../contexts/AuthContext';
+
 
 export const useTransactions = () => {
   const [transactions, setTransactions] = useState([]);
-
+  const { refreshProfile } = useAuth();
+  
   // Carregar todas as transações
   const loadTransactions = async () => {
     try {
@@ -31,6 +34,8 @@ export const useTransactions = () => {
       console.error('Erro ao criar transação:', res.status, res.data);
       throw new Error(res.data?.message || 'Erro ao criar transação');
     }
+
+    await refreshProfile();
 
     const created = res.data;
     setTransactions((prev) => [created, ...prev]);

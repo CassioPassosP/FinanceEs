@@ -1,10 +1,11 @@
 package com.finance.api.service;
 
+import com.finance.api.model.TypeAchievement;
 import com.finance.api.dto.TransactionDTO;
-import com.finance.api.entity.Category;
-import com.finance.api.entity.Transaction;
+import com.finance.api.entity.CategoryEntity;
+import com.finance.api.entity.TransactionEntity;
 import com.finance.api.dto.TransactionDTO;
-import com.finance.api.entity.User;
+import com.finance.api.entity.UserEntity;
 import com.finance.api.repository.CategoryRepository;
 import com.finance.api.repository.TransactionRepository;
 import com.finance.api.repository.UserRepository;
@@ -23,10 +24,13 @@ public class TransactionService {
     private TransactionRepository repository;
 
     @Autowired
+    private GamificationService gamificationService;
+
+    @Autowired
     private UserRepository userRepository;
 
     public List<TransactionDTO> list(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow();
+        UserEntity user = userRepository.findByEmail(email).orElseThrow();
         return repository.findByUserOrderByDateDesc(user).stream()
                 .map(t -> new TransactionDTO(
                     t.getId(),
@@ -46,13 +50,13 @@ public class TransactionService {
 
     public TransactionDTO create(TransactionDTO dto, String email) {
 
-        User user = userRepository.findByEmail(email).orElseThrow();
+        UserEntity user = userRepository.findByEmail(email).orElseThrow();
 
-        Category category = categoryRepository
+        CategoryEntity category = categoryRepository
                 .findById(dto.getCategoryId())
                 .orElseThrow();
 
-        Transaction transaction = new Transaction();
+        TransactionEntity transaction = new TransactionEntity();
 
         transaction.setType(dto.getType());
         transaction.setAmount(dto.getAmount());
@@ -62,7 +66,16 @@ public class TransactionService {
         transaction.setUser(user);
         transaction.setCategory(category);
 
-        Transaction saved = repository.save(transaction);
+        TransactionEntity saved = repository.save(transaction);
+
+        gamificationService.checkTransactionAchievements(user, dto.getType());
+
+        gamificationService.addPoints(
+            user,
+            gamificationService.calculateTransactionPoints(dto.getType())
+        );    
+
+        userRepository.save(user);
 
         return new TransactionDTO(
             saved.getId(),
@@ -81,12 +94,12 @@ public class TransactionService {
 
     public TransactionDTO update(Long id, TransactionDTO dto) {
 
-        Transaction transaction = repository.findById(id)
+        TransactionEntity transaction = repository.findById(id)
                 .orElseThrow();
 
         if (dto.getCategoryId() != null) {
 
-            Category category = categoryRepository
+            CategoryEntity category = categoryRepository
                     .findById(dto.getCategoryId())
                     .orElseThrow();
 
@@ -111,7 +124,7 @@ public class TransactionService {
             transaction.setDate(dto.getDate());
         }
 
-        Transaction updated = repository.save(transaction);
+        TransactionEntity updated = repository.save(transaction);
 
         return new TransactionDTO(
             updated.getId(),
@@ -119,12 +132,17 @@ public class TransactionService {
             updated.getAmount(),
             updated.getDescription(),
             updated.getDate(),
-            updated.getUser().getId(),
-            updated.getCategory().getId()
+            updated.getUser() != null
+                ? updated.getUser().getId()
+                : null,
+            updated.getCategory() != null
+                ? updated.getCategory().getId()
+                : null
         );
     }
 
     public void delete(Long id) {
         repository.deleteById(id);
     }
+
 }
