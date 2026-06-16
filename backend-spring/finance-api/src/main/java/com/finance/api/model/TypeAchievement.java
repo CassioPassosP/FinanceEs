@@ -1,3 +1,5 @@
+package com.finance.api.model;
+
 public enum TypeAchievement {
 
     FIRST_INCOME(

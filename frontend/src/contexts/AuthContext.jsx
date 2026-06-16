@@ -37,7 +37,6 @@ export const AuthProvider = ({ children }) => {
 
       const data = await res.json();
       setProfile(data);
-      console.log(data);
       setUser({
         id: data.id,
         currentLevel: data.currentLevel,

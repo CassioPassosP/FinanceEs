@@ -1,5 +1,6 @@
 package com.finance.api.service;
 
+import com.finance.api.entity.UserEntity;
 import com.finance.api.model.TypeAchievement;
 import java.math.BigDecimal;
 import com.finance.api.entity.GoalEntity;
@@ -38,13 +39,8 @@ public class GoalService {
 
         gamificationService.addPoints(
             user,
-            10
+            5
         );
-
-        // gamificationService.unlockAchievement(
-        //     user,
-        //     com.finance.api.model.TypeAchievement.FIRST_FINANCIAL_GOAL
-        // );
 
         userRepository.save(user);
 
@@ -75,6 +71,17 @@ public class GoalService {
         }
 
         GoalEntity saved = repository.save(goal);
+
+        if (saved.getCurrentAmount().compareTo(saved.getTargetAmount()) >= 0) {
+
+            gamificationService.unlockAchievement(
+                saved.getUser(),
+                TypeAchievement.GOAL_ACHIEVED
+            );      
+        }
+        
+        userRepository.save(saved.getUser());
+
         return repository.findById(saved.getId()).orElseThrow();
     }
 

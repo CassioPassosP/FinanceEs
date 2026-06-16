@@ -1,5 +1,6 @@
 package com.finance.api.service;
 
+import com.finance.api.model.TypeAchievement;
 import com.finance.api.dto.TransactionDTO;
 import com.finance.api.entity.CategoryEntity;
 import com.finance.api.entity.TransactionEntity;
@@ -67,17 +68,12 @@ public class TransactionService {
 
         TransactionEntity saved = repository.save(transaction);
 
+        gamificationService.checkTransactionAchievements(user, dto.getType());
+
         gamificationService.addPoints(
             user,
             gamificationService.calculateTransactionPoints(dto.getType())
-        );
-
-        // gamificationService.unlockAchievement(
-        //     user,
-        //     dto.getType().equalsIgnoreCase("INCOME")
-        //         ? com.finance.api.model.TypeAchievement.FIRST_INCOME
-        //         : com.finance.api.model.TypeAchievement.FIRST_EXPENSE
-        // );
+        );    
 
         userRepository.save(user);
 
@@ -148,4 +144,5 @@ public class TransactionService {
     public void delete(Long id) {
         repository.deleteById(id);
     }
+
 }

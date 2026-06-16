@@ -89,6 +89,8 @@ export function useGoals() {
 
     const newValue = Number(goal.current_amount) + Number(amount);
 
+    await refreshProfile();
+
     return updateGoal(id, { current_amount: newValue });
 
   };

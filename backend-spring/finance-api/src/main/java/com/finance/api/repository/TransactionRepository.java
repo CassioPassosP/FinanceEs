@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface TransactionRepository extends JpaRepository<TransactionEntity, Long> {
     List<TransactionEntity> findByUserOrderByDateDesc(UserEntity user);
+
+    long countByUser(UserEntity user);
 }
