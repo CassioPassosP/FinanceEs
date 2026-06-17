@@ -39,7 +39,7 @@ const handleSubmit = async (data) => {
      if (editingTransaction) {
        await updateTransaction(editingTransaction.id, payload);
      } else {
-        await addTransaction(payload);
+        //await addTransaction(payload);
       }
 
       setShowForm(false);

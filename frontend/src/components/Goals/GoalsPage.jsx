@@ -15,7 +15,7 @@ export const GoalsPage = () => {
       if (editingGoal) {
         await updateGoal(editingGoal.id, data);
       } else {
-        await addGoal(data);
+        //await addGoal(data);
       }
       setShowForm(false);
       setEditingGoal(null);
