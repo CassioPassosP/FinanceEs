@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Edit2, Trash2, Plus, CheckCircle, XCircle } from 'lucide-react';
+import { DeleteCard } from '../GlobalComponents/DeleteCard';
 
 export const GoalCard = ({ goal, onEdit, onDelete, onAddProgress, onUpdateStatus }) => {
   const [showAddProgress, setShowAddProgress] = useState(false);
   const [progressAmount, setProgressAmount] = useState('');
+  const [selectedGoal, setSelectedGoal] = useState(null);
 
   const current = parseFloat(goal.current_amount) || 0;
   const target = parseFloat(goal.target_amount) || 1;
@@ -39,12 +41,6 @@ export const GoalCard = ({ goal, onEdit, onDelete, onAddProgress, onUpdateStatus
           : goal
       )
     );
-  };
-
-  const handleDelete = () => {
-    if (window.confirm('Tem certeza que deseja excluir esta meta?')) {
-      onDelete(goal.id);
-    }
   };
 
   const handleComplete = () => {
@@ -217,7 +213,7 @@ export const GoalCard = ({ goal, onEdit, onDelete, onAddProgress, onUpdateStatus
             </button>
           )}
           <button
-            onClick={handleDelete}
+            onClick={() => setSelectedGoal(goal)}
             className="p-2 text-gray-600 hover:bg-red-50 hover:text-red-600 rounded-lg transition"
             title="Excluir"
           >
@@ -225,6 +221,17 @@ export const GoalCard = ({ goal, onEdit, onDelete, onAddProgress, onUpdateStatus
           </button>
         </div>
       </div>
+      {selectedGoal && (
+        <DeleteCard
+          title="Excluir Meta"
+          description={`Tem certeza que deseja excluir esta meta?`}
+          onSubmit={() => {
+            onDelete(selectedGoal.id);
+            setSelectedGoal(null);
+          }}
+          onCancel={() => setSelectedGoal(null)}
+        />
+      )}
     </div>
   );
 };

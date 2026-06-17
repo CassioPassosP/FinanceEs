@@ -1,7 +1,10 @@
 import { Edit2, Trash2 } from 'lucide-react';
+import { DeleteCard } from '../GlobalComponents/DeleteCard';
+import { useState } from 'react';
 import * as Icons from 'lucide-react';
 
 export const TransactionList = ({ transactions, onEdit, onDelete }) => {
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -21,12 +24,6 @@ export const TransactionList = ({ transactions, onEdit, onDelete }) => {
   const getIcon = (iconName) => {
     const Icon = Icons[iconName] || Icons.Circle;
     return Icon;
-  };
-
-  const handleDelete = (transaction) => {
-    if (window.confirm('Tem certeza que deseja excluir esta transação?')) {
-      onDelete(transaction.id);
-    }
   };
 
   return (
@@ -83,7 +80,7 @@ export const TransactionList = ({ transactions, onEdit, onDelete }) => {
                     <Edit2 className="w-4 h-4" />
                   </button>
                   <button
-                    onClick={() => handleDelete(transaction)}
+                    onClick={() => setSelectedTransaction(transaction)}
                     className="p-2 text-gray-600 hover:bg-red-50 hover:text-red-600 rounded-lg transition"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -93,6 +90,17 @@ export const TransactionList = ({ transactions, onEdit, onDelete }) => {
             </div>
           );
         })
+      )}
+      {selectedTransaction && (
+        <DeleteCard
+          title="Excluir Transação"
+          description={`Tem certeza que deseja excluir esta transação?`}
+          onSubmit={() => {
+            onDelete(selectedTransaction.id);
+            setSelectedTransaction(null);
+          }}
+          onCancel={() => setSelectedTransaction(null)}
+        />
       )}
     </div>
   );
