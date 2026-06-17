@@ -46,9 +46,8 @@ export function useGoals() {
 
     if (res.ok) {
 
-      await refreshProfile();
-
       setGoals((prev) => [...prev, normalizeGoal(res.data)]);
+      await refreshProfile();
     }
   };
 

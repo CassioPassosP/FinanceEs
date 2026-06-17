@@ -24,6 +24,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const loadProfile = async (authToken) => {
+    const start = performance.now();
     try {
       const res = await fetch(`${API}/users/me`, {
         headers: {

@@ -35,10 +35,9 @@ export const useTransactions = () => {
       throw new Error(res.data?.message || 'Erro ao criar transação');
     }
 
-    await refreshProfile();
-
     const created = res.data;
     setTransactions((prev) => [created, ...prev]);
+    await refreshProfile();
     return created;
   };
 
