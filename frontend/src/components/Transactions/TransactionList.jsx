@@ -94,7 +94,7 @@ export const TransactionList = ({ transactions, onEdit, onDelete }) => {
       {selectedTransaction && (
         <DeleteCard
           title="Excluir Transação"
-          description={`Tem certeza que deseja excluir "${selectedTransaction.description}"?`}
+          description={`Tem certeza que deseja excluir esta transação?`}
           onSubmit={() => {
             onDelete(selectedTransaction.id);
             setSelectedTransaction(null);

@@ -224,7 +224,7 @@ export const GoalCard = ({ goal, onEdit, onDelete, onAddProgress, onUpdateStatus
       {selectedGoal && (
         <DeleteCard
           title="Excluir Meta"
-          description={`Tem certeza que deseja excluir "${selectedGoal.description}"?`}
+          description={`Tem certeza que deseja excluir esta meta?`}
           onSubmit={() => {
             onDelete(selectedGoal.id);
             setSelectedGoal(null);
