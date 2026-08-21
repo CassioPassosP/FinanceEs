@@ -41,7 +41,7 @@ function AuthScreen() {
                 <span className="text-white font-bold text-3xl">$</span>
               </div>
               <div>
-                <h1 className="text-4xl font-bold text-gray-900">FinanceFlow</h1>
+                <h1 className="text-4xl font-bold text-gray-900">FinanceEs</h1>
                 <p className="text-gray-600">Gestão Financeira Pessoal</p>
               </div>
             </div>
