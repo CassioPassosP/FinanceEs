@@ -58,7 +58,7 @@ FinanceEs/
 cd backend-spring/finance-api
 ```
 
-Configure o banco de dados no arquivo `application.properties`.
+Copie `.env.example` para `.env` na raiz do repositório e configure as variáveis do banco e do JWT. O backend carrega esse arquivo ao iniciar.
 
 Execute o projeto:
 
@@ -82,14 +82,14 @@ npm run dev
 
 ## 🔑 Variáveis de Ambiente
 
-Exemplo de configuração no backend:
+Exemplo de configuração no arquivo `.env` (na raiz do repositório):
 
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/financees
-spring.datasource.username=seu_usuario
-spring.datasource.password=sua_senha
-
-jwt.secret=sua_chave_secreta
+```dotenv
+DB_URL=jdbc:postgresql://localhost:5432/financees
+DB_USERNAME=seu_usuario
+DB_PASSWORD=sua_senha
+JWT_SECRET=sua_chave_secreta
+JWT_EXPIRATION=86400000
 ```
 
 ---
